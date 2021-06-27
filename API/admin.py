@@ -10,13 +10,11 @@ class WatchListAdmin(admin.ModelAdmin):
 
 
 @admin.register(StreamPlatform)
-
 class StreamPlatformAdmin(admin.ModelAdmin):
     list_display = ['id','name','about','website']
 
 
 @admin.register(Review)
-
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ['id','rating','description','watchlist','created','updated','active']
+    list_display = ['id','review_user','rating','description','watchlist','created','updated','active']
 

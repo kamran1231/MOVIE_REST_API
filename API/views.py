@@ -13,6 +13,7 @@ from API.permissions import AdminOrReadOnly,ReviewUserOrReadOnly
 
 
 class StreamPlatformVS(viewsets.ModelViewSet):
+    permission_classes = [AdminOrReadOnly]
     queryset = StreamPlatform.objects.all()
     serializer_class = StreamPlatformSerializer
 
@@ -20,7 +21,7 @@ class StreamPlatformVS(viewsets.ModelViewSet):
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
 
     def get_queryset(self):
@@ -28,6 +29,7 @@ class ReviewList(generics.ListAPIView):
         return Review.objects.filter(watchlist=pk)
 
 class ReviewCreate(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
@@ -66,6 +68,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class StreamDetailAV(APIView):
+    permission_classes = [AdminOrReadOnly]
     def get(self,request,pk):
         try:
             platfrom = StreamPlatform.objects.get(pk=pk)
@@ -91,7 +94,7 @@ class StreamDetailAV(APIView):
 
 
 class WatchListAV(APIView):
-
+    permission_classes = [AdminOrReadOnly]
     def get(self,request):
         movies = WatchList.objects.all()
         serializer = WatchListSerializer(movies,many=True)
@@ -107,7 +110,7 @@ class WatchListAV(APIView):
 
 
 class WatchDetailAV(APIView):
-
+    permission_classes = [AdminOrReadOnly]
     def get(self,request,pk):
         try:
             movie = WatchList.objects.get(pk=pk)
