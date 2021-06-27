@@ -21,7 +21,7 @@ class StreamPlatformVS(viewsets.ModelViewSet):
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 
     def get_queryset(self):
