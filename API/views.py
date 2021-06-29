@@ -13,6 +13,7 @@ from rest_framework.throttling import UserRateThrottle,AnonRateThrottle
 from .throttling import ReviewCreateThrottle,ReviewListThrottle
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from .pagination import WatchListPagination,WatchListLOPaginaton,WatchListCURPagination
 # Create your views here.
 
 class UserReview(generics.ListAPIView):
@@ -118,7 +119,7 @@ class StreamDetailAV(APIView):
         platfrom.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class WatchList(generics.ListAPIView):
+class WatchListGV(generics.ListAPIView):
     queryset = WatchList.objects.all()
     serializer_class = WatchListSerializer
     '''Django Filter'''
@@ -130,8 +131,15 @@ class WatchList(generics.ListAPIView):
     # search_fields = ['title', 'platform__name']
 
     '''Order filter'''
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['avg_rating']
+    # filter_backends = [filters.OrderingFilter]
+    # ordering_fields = ['avg_rating']
+    # pagination_class = WatchListPagination
+
+    '''Limit Off set Pagination'''
+    # pagination_class = WatchListLOPaginaton
+
+    '''Cursor pagination'''
+    pagination_class = WatchListCURPagination
 
 class WatchListAV(APIView):
     permission_classes = [AdminOrReadOnly]
