@@ -11,7 +11,26 @@ from rest_framework.permissions import IsAuthenticated
 from API.permissions import AdminOrReadOnly,ReviewUserOrReadOnly
 from rest_framework.throttling import UserRateThrottle,AnonRateThrottle
 from .throttling import ReviewCreateThrottle,ReviewListThrottle
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 # Create your views here.
+
+class UserReview(generics.ListAPIView):
+    # queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    #Filter with username
+    # def get_queryset(self):
+    #     username = self.kwargs['username']
+    #     return Review.objects.filter(review_user__username=username)
+
+    #Filter with query parameters
+    def get_queryset(self):
+        username = self.request.query_params.get('username')
+
+        return Review.objects.filter(review_user__username=username)
+
+
 
 
 class StreamPlatformVS(viewsets.ModelViewSet):
@@ -25,6 +44,8 @@ class ReviewList(generics.ListAPIView):
     serializer_class = ReviewSerializer
     # permission_classes = [IsAuthenticated]
     throttle_classes = [ReviewListThrottle,AnonRateThrottle]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['review_user__username', 'active']
 
 
     def get_queryset(self):
@@ -97,7 +118,20 @@ class StreamDetailAV(APIView):
         platfrom.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class WatchList(generics.ListAPIView):
+    queryset = WatchList.objects.all()
+    serializer_class = WatchListSerializer
+    '''Django Filter'''
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ['title', 'platform__name']
 
+    '''Search filter'''
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ['title', 'platform__name']
+
+    '''Order filter'''
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['avg_rating']
 
 class WatchListAV(APIView):
     permission_classes = [AdminOrReadOnly]
